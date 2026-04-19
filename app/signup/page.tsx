@@ -21,17 +21,17 @@ export default async function SignupPage() {
               className="text-[32px] font-bold leading-tight text-foreground"
               style={{ fontFamily: "var(--font-inter)" }}
             >
-              Create your account
+              Створи акаунт
             </h1>
             <p className="text-[15px] text-muted-foreground">
-              Start your fortune cookie journey
+              Почни свою подорож по печиву з передбаченнями
             </p>
           </div>
           <SignupForm />
         </div>
       </div>
       <SidePanel
-        quote={`"The journey of a thousand fortunes begins with one crack"`}
+        quote={`"Шлях у тисячу передбачень починається з одного тріску"`}
       />
     </div>
   );

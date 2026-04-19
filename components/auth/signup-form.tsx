@@ -22,7 +22,7 @@ export function SignupForm() {
     setError(null);
     setInfo(null);
     if (!terms) {
-      setError("Please accept the Terms & Privacy Policy.");
+      setError("Треба прийняти Умови і Політику приватності.");
       return;
     }
     const formData = new FormData(e.currentTarget);
@@ -49,7 +49,7 @@ export function SignupForm() {
         router.refresh();
       } else {
         setInfo(
-          "Check your inbox — we sent a confirmation link to finish setup."
+          "Перевір пошту — ми надіслали посилання для підтвердження."
         );
       }
     });
@@ -68,14 +68,14 @@ export function SignupForm() {
         </Alert>
       )}
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="full_name">Full name</Label>
+        <Label htmlFor="full_name">Ім&apos;я</Label>
         <Input
           id="full_name"
           name="full_name"
           type="text"
           autoComplete="name"
           required
-          placeholder="Nikola Tesla"
+          placeholder="Нікола Тесла"
         />
       </div>
       <div className="flex flex-col gap-1.5">
@@ -86,11 +86,11 @@ export function SignupForm() {
           type="email"
           autoComplete="email"
           required
-          placeholder="you@example.com"
+          placeholder="ти@приклад.com"
         />
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">Пароль</Label>
         <Input
           id="password"
           name="password"
@@ -105,18 +105,18 @@ export function SignupForm() {
           checked={terms}
           onCheckedChange={(v) => setTerms(v === true)}
         />
-        <span>I agree to Terms &amp; Privacy Policy</span>
+        <span>Приймаю Умови та Політику приватності</span>
       </label>
       <Button
         type="submit"
         disabled={pending}
         className="mt-2 h-12 w-full rounded-full text-sm font-medium"
       >
-        {pending ? "Creating account…" : "Create Account"}
+        {pending ? "Створюємо акаунт…" : "Створити акаунт"}
       </Button>
       <div className="flex items-center gap-3 pt-2 text-[13px] text-muted-foreground">
         <div className="h-px flex-1 bg-border" />
-        <span>or continue with</span>
+        <span>або через</span>
         <div className="h-px flex-1 bg-border" />
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -125,7 +125,7 @@ export function SignupForm() {
           variant="outline"
           disabled
           className="h-10 rounded-full"
-          title="Coming soon"
+          title="Скоро"
         >
           Google
         </Button>
@@ -134,15 +134,15 @@ export function SignupForm() {
           variant="outline"
           disabled
           className="h-10 rounded-full"
-          title="Coming soon"
+          title="Скоро"
         >
           Apple
         </Button>
       </div>
       <p className="pt-2 text-center text-[13px] text-muted-foreground">
-        Already have an account?{" "}
+        Вже є акаунт?{" "}
         <Link href="/login" className="font-semibold text-primary">
-          Sign in
+          Увійти
         </Link>
       </p>
     </form>

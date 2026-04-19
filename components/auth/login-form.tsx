@@ -51,18 +51,19 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
           type="email"
           autoComplete="email"
           required
-          placeholder="you@example.com"
+          placeholder="ти@приклад.com"
         />
       </div>
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
-          <span
-            className="text-[13px] text-muted-foreground"
+          <Label htmlFor="password">Пароль</Label>
+          <Link
+            href="/forgot-password"
+            className="text-[13px] text-muted-foreground hover:text-primary"
             style={{ fontFamily: "var(--font-funnel-sans)" }}
           >
-            Forgot password?
-          </span>
+            Забув пароль?
+          </Link>
         </div>
         <Input
           id="password"
@@ -78,11 +79,11 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
         disabled={pending}
         className="mt-2 h-12 w-full rounded-full text-sm font-medium"
       >
-        {pending ? "Signing in…" : "Sign In"}
+        {pending ? "Входимо…" : "Увійти"}
       </Button>
       <div className="flex items-center gap-3 pt-2 text-[13px] text-muted-foreground">
         <div className="h-px flex-1 bg-border" />
-        <span>or continue with</span>
+        <span>або через</span>
         <div className="h-px flex-1 bg-border" />
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -91,7 +92,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
           variant="outline"
           disabled
           className="h-10 rounded-full"
-          title="Coming soon"
+          title="Скоро"
         >
           Google
         </Button>
@@ -100,15 +101,15 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
           variant="outline"
           disabled
           className="h-10 rounded-full"
-          title="Coming soon"
+          title="Скоро"
         >
           Apple
         </Button>
       </div>
       <p className="pt-2 text-center text-[13px] text-muted-foreground">
-        Don&apos;t have an account?{" "}
+        Ще немає акаунту?{" "}
         <Link href="/signup" className="font-semibold text-primary">
-          Sign up
+          Зареєструватися
         </Link>
       </p>
     </form>

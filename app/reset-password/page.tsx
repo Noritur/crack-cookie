@@ -2,20 +2,14 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Logo } from "@/components/auth/logo";
 import { SidePanel } from "@/components/auth/side-panel";
-import { LoginForm } from "@/components/auth/login-form";
+import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ next?: string }>;
-}) {
+export default async function ResetPasswordPage() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (user) redirect("/");
-
-  const { next } = await searchParams;
+  if (!user) redirect("/forgot-password");
 
   return (
     <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[minmax(0,1.22fr)_minmax(0,1fr)]">
@@ -27,16 +21,16 @@ export default async function LoginPage({
               className="text-[32px] font-bold leading-tight text-foreground"
               style={{ fontFamily: "var(--font-inter)" }}
             >
-              З поверненням
+              Новий пароль
             </h1>
             <p className="text-[15px] text-muted-foreground">
-              Увійди, щоб продовжити ламати печиво
+              Обери щось, що не забудеш до наступного печива
             </p>
           </div>
-          <LoginForm redirectTo={next} />
+          <ResetPasswordForm />
         </div>
       </div>
-      <SidePanel quote={`"Кожне печиво — всесвіт можливостей"`} />
+      <SidePanel quote={`"Новий ключ до тих самих дверей"`} />
     </div>
   );
 }

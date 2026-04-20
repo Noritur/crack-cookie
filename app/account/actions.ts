@@ -16,3 +16,18 @@ export async function deleteFortune(id: string): Promise<{ ok: boolean }> {
   revalidatePath("/");
   return { ok: Boolean(data) };
 }
+
+export async function toggleFavorite(
+  id: string,
+): Promise<{ ok: true; isFavorite: boolean } | { ok: false }> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("toggle_favorite", { p_id: id });
+
+  if (error) {
+    console.error("toggle_favorite rpc error:", error);
+    return { ok: false };
+  }
+
+  revalidatePath("/account");
+  return { ok: true, isFavorite: Boolean(data) };
+}

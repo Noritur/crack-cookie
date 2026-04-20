@@ -11,7 +11,13 @@ function todayUtc() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export default async function AccountPage() {
+type Tab = "all" | "fav";
+
+export default async function AccountPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -19,17 +25,22 @@ export default async function AccountPage() {
 
   if (!user) redirect("/login");
 
+  const { tab: tabRaw } = await searchParams;
+  const tab: Tab = tabRaw === "fav" ? "fav" : "all";
+
   const { data: fortunes } = await supabase
     .from("user_fortunes")
-    .select("id, fortune_text, created_at")
+    .select("id, fortune_text, created_at, is_favorite")
     .eq("user_id", user.id)
     .is("deleted_at", null)
     .order("created_at", { ascending: false });
 
-  const rows = fortunes ?? [];
-  const total = rows.length;
+  const all = fortunes ?? [];
+  const total = all.length;
+  const favCount = all.filter((r) => r.is_favorite).length;
+  const rows = tab === "fav" ? all.filter((r) => r.is_favorite) : all;
   const firstCrackAt =
-    rows.length > 0 ? rows[rows.length - 1].created_at : null;
+    all.length > 0 ? all[all.length - 1].created_at : null;
 
   const { data: todayAny } = await supabase
     .from("user_fortunes")
@@ -60,12 +71,14 @@ export default async function AccountPage() {
               <StatsCard total={total} firstCrackAt={firstCrackAt} />
             )}
           </div>
-          <CollectionTabs />
+          <CollectionTabs active={tab} favCount={favCount} />
         </section>
 
         <section className="px-6 pb-16 md:px-12">
           {total === 0 ? (
             <EmptyState crackedToday={crackedToday} />
+          ) : rows.length === 0 ? (
+            <FavEmptyState />
           ) : (
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
               {rows.map((row, idx) => (
@@ -74,13 +87,31 @@ export default async function AccountPage() {
                   id={row.id}
                   text={row.fortune_text}
                   createdAt={row.created_at}
-                  featured={idx === 0}
+                  isFavorite={row.is_favorite}
+                  featured={tab === "all" && idx === 0}
                 />
               ))}
             </div>
           )}
         </section>
       </main>
+    </div>
+  );
+}
+
+function FavEmptyState() {
+  return (
+    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-card py-14 text-center">
+      <span style={{ fontSize: 48, lineHeight: 1 }}>⭐️</span>
+      <h2
+        className="text-[18px] font-semibold text-foreground"
+        style={{ fontFamily: "var(--font-inter)" }}
+      >
+        Поки жодної обраної
+      </h2>
+      <p className="max-w-sm text-[14px] text-muted-foreground">
+        Тисни на зірку в картці, щоб зберегти фортуну сюди.
+      </p>
     </div>
   );
 }

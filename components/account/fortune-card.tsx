@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { Share2, Trash2, Sparkles } from "lucide-react";
-import { deleteFortune } from "@/app/account/actions";
+import { useOptimistic, useState, useTransition } from "react";
+import { Share2, Star, Trash2, Sparkles } from "lucide-react";
+import { deleteFortune, toggleFavorite } from "@/app/account/actions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ type Props = {
   id: string;
   text: string;
   createdAt: string;
+  isFavorite: boolean;
   featured?: boolean;
 };
 
@@ -23,9 +24,16 @@ function formatDate(iso: string): string {
   return `${d.getDate()} ${MONTHS_UA[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-export function FortuneCard({ id, text, createdAt, featured = false }: Props) {
+export function FortuneCard({
+  id,
+  text,
+  createdAt,
+  isFavorite,
+  featured = false,
+}: Props) {
   const [isPending, startTransition] = useTransition();
   const [shareNote, setShareNote] = useState<string | null>(null);
+  const [optimisticFav, setOptimisticFav] = useOptimistic(isFavorite);
 
   function onShare() {
     const payload = `«${text}» — моя фортуна з crack-cookie.vercel.app`;
@@ -48,6 +56,13 @@ export function FortuneCard({ id, text, createdAt, featured = false }: Props) {
     if (!confirm("Видалити цю фортуну з колекції?")) return;
     startTransition(async () => {
       await deleteFortune(id);
+    });
+  }
+
+  function onToggleFavorite() {
+    startTransition(async () => {
+      setOptimisticFav(!optimisticFav);
+      await toggleFavorite(id);
     });
   }
 
@@ -103,6 +118,30 @@ export function FortuneCard({ id, text, createdAt, featured = false }: Props) {
                 {shareNote}
               </span>
             )}
+            <Button
+              type="button"
+              onClick={onToggleFavorite}
+              disabled={isPending}
+              variant="ghost"
+              size="icon-sm"
+              aria-label={optimisticFav ? "Прибрати з обраних" : "Додати в обрані"}
+              aria-pressed={optimisticFav}
+              className={cn(
+                "rounded-full",
+                featured
+                  ? "text-white hover:bg-white/20 hover:text-white"
+                  : optimisticFav
+                    ? "text-primary hover:text-primary"
+                    : "hover:text-primary",
+              )}
+            >
+              <Star
+                className={cn(
+                  "size-4",
+                  optimisticFav && (featured ? "fill-white" : "fill-primary"),
+                )}
+              />
+            </Button>
             <Button
               type="button"
               onClick={onShare}

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { TopNav } from "@/components/layout/top-nav";
+import { MobileTabBar } from "@/components/layout/mobile-tab-bar";
 import { CookieCrack } from "@/components/cookie/cookie-crack";
 import { CrackedFortune } from "@/components/cookie/cracked-fortune";
 import { AlreadyCrackedEmpty } from "@/components/cookie/already-cracked-empty";
@@ -40,7 +41,7 @@ export default async function HomePage() {
     .maybeSingle();
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background pb-20 md:pb-0">
       <TopNav activeHref="/" />
       <main className="relative flex flex-1 items-center justify-center overflow-hidden px-6 py-12">
         <div className="pointer-events-none absolute inset-0 -z-10">
@@ -71,6 +72,7 @@ export default async function HomePage() {
           <CookieCrack />
         )}
       </main>
+      <MobileTabBar />
     </div>
   );
 }

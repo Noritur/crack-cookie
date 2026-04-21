@@ -1,17 +1,9 @@
 type Props = {
   total: number;
-  firstCrackAt: string | null;
+  favCount: number;
 };
 
-function daysSince(iso: string): number {
-  const first = new Date(iso);
-  const now = new Date();
-  const ms = now.getTime() - first.getTime();
-  return Math.max(1, Math.floor(ms / (1000 * 60 * 60 * 24)) + 1);
-}
-
-export function StatsCard({ total, firstCrackAt }: Props) {
-  const days = firstCrackAt ? daysSince(firstCrackAt) : 0;
+export function StatsCard({ total, favCount }: Props) {
   return (
     <div className="flex items-center gap-6">
       <div className="flex flex-col items-end gap-0.5">
@@ -33,13 +25,13 @@ export function StatsCard({ total, firstCrackAt }: Props) {
           className="text-[28px] font-bold text-foreground leading-none"
           style={{ fontFamily: "var(--font-inter)" }}
         >
-          {days}
+          {favCount}
         </span>
         <span
           className="text-[12px] text-muted-foreground"
           style={{ fontFamily: "var(--font-funnel-sans)" }}
         >
-          {days === 1 ? "день разом" : "днів разом"}
+          {favCount === 1 ? "обране" : "обраних"}
         </span>
       </div>
     </div>

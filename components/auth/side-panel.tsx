@@ -1,13 +1,24 @@
-export function SidePanel({ quote }: { quote: string }) {
+import Image from "next/image";
+
+type Props = {
+  quote: string;
+  variant?: "login" | "signup";
+};
+
+export function SidePanel({ quote, variant = "login" }: Props) {
+  const src = variant === "signup" ? "/auth/signup-bg.png" : "/auth/login-bg.png";
+
   return (
-    <div
-      className="relative hidden h-full flex-col justify-end p-12 lg:flex"
-      style={{
-        background:
-          "linear-gradient(135deg, #ff7a2b 0%, #ff5c00 60%, #c94400 100%)",
-      }}
-    >
-      <div className="pointer-events-none absolute inset-0 opacity-25 mix-blend-overlay [background:radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.35),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(0,0,0,0.35),transparent_55%)]" />
+    <div className="relative hidden h-full flex-col justify-end overflow-hidden p-12 lg:flex">
+      <Image
+        src={src}
+        alt=""
+        fill
+        priority
+        sizes="(min-width: 1024px) 45vw, 0px"
+        className="object-cover"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
       <div
         className="relative rounded-lg bg-black/35 px-6 py-5 backdrop-blur-sm"
         style={{ fontFamily: "var(--font-geist-sans)" }}

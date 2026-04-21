@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { crackFortune } from "@/app/actions/crack";
@@ -84,8 +85,7 @@ export function CookieCrack() {
         disabled={phase !== "idle"}
         aria-label="Розламати печиво"
         className={cn(
-          "relative size-60 rounded-full outline-none",
-          "bg-gradient-to-br from-[#FFD4A8] via-[#FF8C42] to-[#FF5C00]",
+          "relative size-50 md:size-65 overflow-hidden rounded-full outline-none",
           "shadow-[0_12px_40px_-4px_rgba(255,92,0,0.35),_0_4px_12px_-2px_rgba(255,92,0,0.2)]",
           "transition-transform duration-200 ease-out",
           "focus-visible:ring-4 focus-visible:ring-primary/30",
@@ -94,12 +94,22 @@ export function CookieCrack() {
           phase === "cracking" && "animate-cookie-shake"
         )}
       >
-        <span
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ fontSize: 150, lineHeight: 1 }}
-        >
-          🥠
-        </span>
+        <Image
+          src="/cookie/cookie.png"
+          alt=""
+          fill
+          priority
+          sizes="(min-width: 768px) 260px, 0px"
+          className="hidden object-cover md:block"
+        />
+        <Image
+          src="/cookie/cookie-mobile.png"
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 767px) 200px, 0px"
+          className="block object-cover md:hidden"
+        />
       </button>
 
       <p className="text-[15px] text-muted-foreground">

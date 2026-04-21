@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { TopNav } from "@/components/layout/top-nav";
 import { CookieCrack } from "@/components/cookie/cookie-crack";
@@ -41,7 +42,25 @@ export default async function HomePage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <TopNav activeHref="/" />
-      <main className="flex flex-1 items-center justify-center px-6 py-12">
+      <main className="relative flex flex-1 items-center justify-center overflow-hidden px-6 py-12">
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <Image
+            src="/cookie/cracking-bg.png"
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 768px) 100vw, 0px"
+            className="hidden object-cover opacity-20 md:block"
+          />
+          <Image
+            src="/cookie/cracking-bg-mobile.png"
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 767px) 100vw, 0px"
+            className="block object-cover opacity-15 md:hidden"
+          />
+        </div>
         {todayRow ? (
           todayRow.deleted_at ? (
             <AlreadyCrackedEmpty />

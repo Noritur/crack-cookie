@@ -31,6 +31,7 @@ export default async function SignupPage() {
         </div>
       </div>
       <SidePanel
+        variant="signup"
         quote={`"Шлях у тисячу передбачень починається з одного тріску"`}
       />
     </div>

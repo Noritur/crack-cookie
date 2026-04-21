@@ -1,9 +1,17 @@
+import Image from "next/image";
+
 export function AlreadyCrackedEmpty() {
   return (
     <div className="flex max-w-md flex-col items-center gap-5 text-center animate-fortune-reveal">
-      <span style={{ fontSize: 64, lineHeight: 1 }} aria-hidden>
-        🥠
-      </span>
+      <div className="relative size-30 overflow-hidden rounded-full opacity-70 shadow-[0_8px_24px_-4px_rgba(255,92,0,0.25)]">
+        <Image
+          src="/cookie/cookie.png"
+          alt=""
+          fill
+          sizes="120px"
+          className="object-cover"
+        />
+      </div>
       <p
         className="text-[12px] font-medium uppercase tracking-[0.24em] text-muted-foreground"
         style={{ fontFamily: "var(--font-funnel-sans)" }}

@@ -3,20 +3,23 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { TopNav } from "@/components/layout/top-nav";
 import { StatsCard } from "@/components/account/stats-card";
-import { CollectionTabs } from "@/components/account/collection-tabs";
+import { CollectionTabs, type Tab } from "@/components/account/collection-tabs";
 import { FortuneCard } from "@/components/account/fortune-card";
+import { SearchInput } from "@/components/account/search-input";
 import { Button } from "@/components/ui/button";
 
 function todayUtc() {
   return new Date().toISOString().slice(0, 10);
 }
 
-type Tab = "all" | "fav";
+function sevenDaysAgoIso() {
+  return new Date(Date.now() - 7 * 864e5).toISOString();
+}
 
 export default async function AccountPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string }>;
+  searchParams: Promise<{ tab?: string; q?: string }>;
 }) {
   const supabase = await createClient();
   const {
@@ -25,8 +28,10 @@ export default async function AccountPage({
 
   if (!user) redirect("/login");
 
-  const { tab: tabRaw } = await searchParams;
-  const tab: Tab = tabRaw === "fav" ? "fav" : "all";
+  const { tab: tabRaw, q: qRaw } = await searchParams;
+  const tab: Tab =
+    tabRaw === "fav" || tabRaw === "recent" ? tabRaw : "all";
+  const q = (qRaw ?? "").trim().slice(0, 100);
 
   const { data: fortunes } = await supabase
     .from("user_fortunes")
@@ -38,9 +43,16 @@ export default async function AccountPage({
   const all = fortunes ?? [];
   const total = all.length;
   const favCount = all.filter((r) => r.is_favorite).length;
-  const rows = tab === "fav" ? all.filter((r) => r.is_favorite) : all;
-  const firstCrackAt =
-    all.length > 0 ? all[all.length - 1].created_at : null;
+  const firstCrackAt = all.length > 0 ? all[all.length - 1].created_at : null;
+
+  const recentCutoff = sevenDaysAgoIso();
+  let rows = all;
+  if (tab === "fav") rows = rows.filter((r) => r.is_favorite);
+  if (tab === "recent") rows = rows.filter((r) => r.created_at >= recentCutoff);
+  if (q) {
+    const needle = q.toLowerCase();
+    rows = rows.filter((r) => r.fortune_text.toLowerCase().includes(needle));
+  }
 
   const { data: todayAny } = await supabase
     .from("user_fortunes")
@@ -71,14 +83,15 @@ export default async function AccountPage({
               <StatsCard total={total} firstCrackAt={firstCrackAt} />
             )}
           </div>
-          <CollectionTabs active={tab} favCount={favCount} />
+          {total > 0 && <SearchInput initialQ={q} tab={tab} />}
+          <CollectionTabs active={tab} favCount={favCount} q={q} />
         </section>
 
         <section className="px-6 pb-16 md:px-12">
           {total === 0 ? (
             <EmptyState crackedToday={crackedToday} />
           ) : rows.length === 0 ? (
-            <FavEmptyState />
+            <NoResultsState tab={tab} q={q} />
           ) : (
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
               {rows.map((row, idx) => (
@@ -88,7 +101,7 @@ export default async function AccountPage({
                   text={row.fortune_text}
                   createdAt={row.created_at}
                   isFavorite={row.is_favorite}
-                  featured={tab === "all" && idx === 0}
+                  featured={!q && tab === "all" && idx === 0}
                 />
               ))}
             </div>
@@ -99,7 +112,44 @@ export default async function AccountPage({
   );
 }
 
-function FavEmptyState() {
+function NoResultsState({ tab, q }: { tab: Tab; q: string }) {
+  if (q) {
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-card py-14 text-center">
+        <span style={{ fontSize: 48, lineHeight: 1 }}>🔍</span>
+        <h2
+          className="text-[18px] font-semibold text-foreground"
+          style={{ fontFamily: "var(--font-inter)" }}
+        >
+          Нічого не знайдено за «{q}»
+        </h2>
+        <Link
+          href={tab === "all" ? "/account" : `/account?tab=${tab}`}
+          className="text-[14px] font-semibold text-primary underline-offset-4 hover:underline"
+        >
+          скинути пошук
+        </Link>
+      </div>
+    );
+  }
+
+  if (tab === "recent") {
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-card py-14 text-center">
+        <span style={{ fontSize: 48, lineHeight: 1 }}>🗓️</span>
+        <h2
+          className="text-[18px] font-semibold text-foreground"
+          style={{ fontFamily: "var(--font-inter)" }}
+        >
+          За 7 днів немає печива
+        </h2>
+        <p className="max-w-sm text-[14px] text-muted-foreground">
+          {"Розлами одне сьогодні — воно з'явиться тут."}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-card py-14 text-center">
       <span style={{ fontSize: 48, lineHeight: 1 }}>⭐️</span>

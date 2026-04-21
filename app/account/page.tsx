@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { TopNav } from "@/components/layout/top-nav";
+import { MobileTabBar } from "@/components/layout/mobile-tab-bar";
 import { StatsCard } from "@/components/account/stats-card";
 import { CollectionTabs, type Tab } from "@/components/account/collection-tabs";
 import { FortuneCard } from "@/components/account/fortune-card";
@@ -43,7 +44,6 @@ export default async function AccountPage({
   const all = fortunes ?? [];
   const total = all.length;
   const favCount = all.filter((r) => r.is_favorite).length;
-  const firstCrackAt = all.length > 0 ? all[all.length - 1].created_at : null;
 
   const recentCutoff = sevenDaysAgoIso();
   let rows = all;
@@ -63,7 +63,7 @@ export default async function AccountPage({
   const crackedToday = Boolean(todayAny);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background pb-20 md:pb-0">
       <TopNav activeHref="/account" />
       <main className="flex flex-col">
         <section className="flex flex-col gap-6 px-6 pt-10 pb-6 md:px-12">
@@ -80,7 +80,7 @@ export default async function AccountPage({
               </p>
             </div>
             {total > 0 && (
-              <StatsCard total={total} firstCrackAt={firstCrackAt} />
+              <StatsCard total={total} favCount={favCount} />
             )}
           </div>
           {total > 0 && <SearchInput initialQ={q} tab={tab} />}
@@ -108,6 +108,7 @@ export default async function AccountPage({
           )}
         </section>
       </main>
+      <MobileTabBar />
     </div>
   );
 }

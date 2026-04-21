@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Library } from "lucide-react";
+import { Home, Library, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Item = {
@@ -14,11 +14,13 @@ type Item = {
 const items: ReadonlyArray<Item> = [
   { href: "/", label: "Головна", icon: Home },
   { href: "/account", label: "Колекція", icon: Library },
+  { href: "/profile", label: "Профіль", icon: User },
 ];
 
 export function MobileTabBar() {
   const pathname = usePathname();
-  const activeHref = pathname === "/account" ? "/account" : "/";
+  const activeHref =
+    pathname === "/account" ? "/account" : pathname === "/profile" ? "/profile" : "/";
 
   return (
     <nav

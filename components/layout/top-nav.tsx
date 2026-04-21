@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { History } from "lucide-react";
+import { Library, User } from "lucide-react";
 import { Logo } from "@/components/auth/logo";
 import { Button, buttonVariants } from "@/components/ui/button";
 
@@ -10,15 +10,26 @@ export function TopNav({ activeHref }: { activeHref?: string }) {
         <Logo />
       </Link>
       <div className="flex items-center gap-2">
-        {activeHref !== "/account" && (
-          <Link
-            href="/account"
-            aria-label="Колекція"
-            className={buttonVariants({ variant: "ghost", size: "icon" })}
-          >
-            <History className="size-5" />
-          </Link>
-        )}
+        <div className="hidden items-center gap-1 md:flex">
+          {activeHref !== "/account" && (
+            <Link
+              href="/account"
+              aria-label="Колекція"
+              className={buttonVariants({ variant: "ghost", size: "icon" })}
+            >
+              <Library className="size-5" />
+            </Link>
+          )}
+          {activeHref !== "/profile" && (
+            <Link
+              href="/profile"
+              aria-label="Профіль"
+              className={buttonVariants({ variant: "ghost", size: "icon" })}
+            >
+              <User className="size-5" />
+            </Link>
+          )}
+        </div>
         <form action="/auth/signout" method="POST">
           <Button
             type="submit"

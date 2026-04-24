@@ -24,12 +24,12 @@ export function HeroSection() {
           height={360}
           priority
           sizes="100vw"
-          className="block h-[320px] w-full object-cover md:hidden"
+          className="block h-[380px] w-full object-cover md:hidden"
         />
-        <div className="block md:hidden absolute inset-x-0 top-0 h-[340px] bg-gradient-to-b from-transparent via-background/40 to-background" />
+        <div className="block md:hidden absolute inset-x-0 top-0 h-[380px] bg-gradient-to-b from-transparent from-[55%] to-background" />
       </div>
 
-      <div className="relative flex min-h-[720px] flex-col gap-10 px-6 pb-12 pt-[280px] md:px-12 md:pb-20 md:pt-24 lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-12 lg:pt-28">
+      <div className="relative flex min-h-[720px] flex-col gap-10 px-6 pb-12 pt-[220px] md:px-12 md:pb-20 md:pt-24 lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-12 lg:pt-28">
         <div className="flex flex-col gap-6 lg:max-w-[560px]">
           <h1
             className="text-[36px] font-bold leading-[1.05] tracking-tight text-foreground md:text-[56px] lg:text-[72px]"

@@ -13,8 +13,10 @@ function todayUtc() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function sevenDaysAgoIso() {
-  return new Date(Date.now() - 7 * 864e5).toISOString();
+const RECENT_DAYS = 3;
+
+function recentCutoffIso() {
+  return new Date(Date.now() - RECENT_DAYS * 864e5).toISOString();
 }
 
 export default async function AccountPage({
@@ -45,7 +47,7 @@ export default async function AccountPage({
   const total = all.length;
   const favCount = all.filter((r) => r.is_favorite).length;
 
-  const recentCutoff = sevenDaysAgoIso();
+  const recentCutoff = recentCutoffIso();
   let rows = all;
   if (tab === "fav") rows = rows.filter((r) => r.is_favorite);
   if (tab === "recent") rows = rows.filter((r) => r.created_at >= recentCutoff);
@@ -142,7 +144,7 @@ function NoResultsState({ tab, q }: { tab: Tab; q: string }) {
           className="text-[18px] font-semibold text-foreground"
           style={{ fontFamily: "var(--font-inter)" }}
         >
-          За 7 днів немає печива
+          {`За ${RECENT_DAYS} дні немає печива`}
         </h2>
         <p className="max-w-sm text-[14px] text-muted-foreground">
           {"Розлами одне сьогодні — воно з'явиться тут."}

@@ -23,6 +23,9 @@ const funnelSans = Funnel_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://crack-cookie.vercel.app",
+  ),
   title: "FortuneCrack — crack cookies, read futures",
   description: "Crack a fortune cookie and see what the universe whispers back.",
 };

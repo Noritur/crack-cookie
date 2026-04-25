@@ -4,6 +4,7 @@ import { useOptimistic, useState, useTransition } from "react";
 import { Share2, Star, Trash2, Sparkles } from "lucide-react";
 import { deleteFortune, toggleFavorite } from "@/app/account/actions";
 import { Button } from "@/components/ui/button";
+import { encodeShareToken } from "@/lib/share";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -36,13 +37,14 @@ export function FortuneCard({
   const [optimisticFav, setOptimisticFav] = useOptimistic(isFavorite);
 
   function onShare() {
-    const payload = `«${text}» — моя фортуна з crack-cookie.vercel.app`;
+    const url = `${window.location.origin}/share/${encodeShareToken(text)}`;
+    const payload = `«${text}»`;
     if (typeof navigator !== "undefined" && navigator.share) {
-      navigator.share({ text: payload }).catch(() => {});
+      navigator.share({ text: payload, url }).catch(() => {});
       return;
     }
     if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(payload).then(
+      navigator.clipboard.writeText(`${payload}\n${url}`).then(
         () => {
           setShareNote("скопійовано");
           setTimeout(() => setShareNote(null), 1500);

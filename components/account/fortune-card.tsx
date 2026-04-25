@@ -38,13 +38,12 @@ export function FortuneCard({
 
   function onShare() {
     const url = `${window.location.origin}/share/${encodeShareToken(text)}`;
-    const payload = `«${text}»`;
     if (typeof navigator !== "undefined" && navigator.share) {
-      navigator.share({ text: payload, url }).catch(() => {});
+      navigator.share({ url }).catch(() => {});
       return;
     }
     if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(`${payload}\n${url}`).then(
+      navigator.clipboard.writeText(url).then(
         () => {
           setShareNote("скопійовано");
           setTimeout(() => setShareNote(null), 1500);
